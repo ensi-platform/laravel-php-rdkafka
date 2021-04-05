@@ -1,4 +1,4 @@
-# Bridge package for php-rdkafka
+# Bridge package between Laravel and php-rdkafka
 
 ## Installation
 
@@ -57,7 +57,7 @@ if (RD_KAFKA_RESP_ERR_NO_ERROR !== $result) {
 
 ```
 
-Consuner example:
+Consumer example:
 
 ```php
 
