@@ -1,5 +1,7 @@
 # Bridge package between Laravel and php-rdkafka
 
+This packages allows you to describe Kafka producers and consumers in config/kafka.php and then reuse them everywhere.
+
 ## Installation
 
 You can install the package via composer:
@@ -13,8 +15,9 @@ Publish the config file with:
 php artisan vendor:publish --provider="Greensight\LaravelPhpRdKafka\LaravelPhpRdKafkaServiceProvider" --tag="kafka-config"
 ```
 
-Now go to config/kafka.php and configure your producers and consumers there.
-You typically need one producer/consumer per Kafka Cluster
+Now go to `config/kafka.php` and configure your producers and consumers there.
+You typically need one producer/consumer per Kafka Cluster.
+Configuration parameters can found in [Librdkafka Configuration reference](https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md)
 
 ## Usage
 
@@ -90,6 +93,16 @@ public function handle(KafkaManager $kafkaManager)
 ```
 
 You can learn more about php-rdkafka producers and consumers [php-rdkafka examples](https://arnaud.le-blanc.net/php-rdkafka-doc/phpdoc/rdkafka.examples.html)
+
+Direct access to `RdKafka\Conf` instances is available with the following getters:
+
+
+```php
+
+$producerConf = $kafkaManager->producerConfig('producer-name');
+$consumerConf = $kafkaManager->consumerConfig('consumer-name');
+
+```
 
 ## Testing
 
