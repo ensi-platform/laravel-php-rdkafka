@@ -10,7 +10,7 @@ composer require greensight/laravel-phprdkafka
 
 Publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Greensight\LaravelPhpRdKafka\KafkaServiceProvider" --tag="kafka-config"
+php artisan vendor:publish --provider="Greensight\LaravelPhpRdKafka\LaravelPhpRdKafkaServiceProvider" --tag="kafka-config"
 ```
 
 Now go to config/kafka.php and configure your producers and consumers there.
