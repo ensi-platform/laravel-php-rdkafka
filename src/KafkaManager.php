@@ -134,24 +134,8 @@ class KafkaManager
       return $config;
    }
 
-   /**
-    * Register a terminating callback with the application.
-    *
-    * @deprecated use app()->terminating() directly
-    * @param  callable|string  $callback
-    * @return $this
-    */
-   public function terminating($callback)
-   {
-      return $this->app->terminating($callback);
-   }
-
    protected function cleanupConfigValues(array $configValues)
    {
-      if ($configValues['security.protocol'] === 'plaintext') {
-         unset($configValues['security.protocol'], $configValues['security.username'], $configValues['sasl.password']);
-      }
-
       foreach ($configValues as $key => $value) {
          if ($value === null) {
             unset($configValues[$key]);
