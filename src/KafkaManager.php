@@ -23,28 +23,28 @@ class KafkaManager
     *
     * @var array
     */
-   protected array $consumersConfigs = [];
+   protected $consumersConfigs = [];
 
    /**
     * Producers configs.
     *
     * @var array
     */
-   protected array $producersConfigs = [];
+   protected $producersConfigs = [];
 
    /**
     * Consumers.
     *
     * @var array
     */
-   protected array $consumers = [];
+   protected $consumers = [];
 
    /**
     * Producers.
     *
     * @var array
     */
-   protected array $producers = [];
+   protected $producers = [];
 
    /**
     * Create a new kafka manager instance.
