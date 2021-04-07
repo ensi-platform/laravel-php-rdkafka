@@ -137,6 +137,7 @@ class KafkaManager
    /**
     * Register a terminating callback with the application.
     *
+    * @deprecated use app()->terminating() directly
     * @param  callable|string  $callback
     * @return $this
     */
