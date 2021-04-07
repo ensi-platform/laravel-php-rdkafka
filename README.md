@@ -56,7 +56,7 @@ if (RD_KAFKA_RESP_ERR_NO_ERROR !== $result) {
 
 // If you use php-fpm and producing is slow you can move its execution to the place after response has been sent. 
 // This can be achieved e.g. by wrapping the whole producing or at least flushing in it in a "terminating" callback.
-// $kafkaManager->terminating(function () { ... });
+// app()->terminating(function () { ... });
 
 ```
 
