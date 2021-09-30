@@ -81,6 +81,7 @@ public function handle(KafkaManager $kafkaManager)
                echo "No more messages; will wait for more\n";
                break;
             case RD_KAFKA_RESP_ERR__TIMED_OUT:
+               // this also happens when there is no new messages in the topic after the specified timeout: https://github.com/arnaud-lb/php-rdkafka/issues/343
                echo "Timed out\n";
                break;
             default:
