@@ -1,6 +1,6 @@
 <?php
 
-namespace Greensight\LaravelPhpRdKafka;
+namespace Ensi\LaravelPhpRdKafka;
 
 use Illuminate\Support\ServiceProvider;
 

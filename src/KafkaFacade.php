@@ -1,11 +1,11 @@
 <?php
 
-namespace Greensight\LaravelPhpRdKafka;
+namespace Ensi\LaravelPhpRdKafka;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Greensight\LaravelPhpRdKafka\KafkaManager
+ * @see \Ensi\LaravelPhpRdKafka\KafkaManager
  */
 class KafkaFacade extends Facade
 {

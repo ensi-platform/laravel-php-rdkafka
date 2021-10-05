@@ -7,12 +7,12 @@ This packages allows you to describe Kafka producers and consumers in config/kaf
 You can install the package via composer:
 
 ```bash
-composer require greensight/laravel-phprdkafka
+composer require ensi/laravel-phprdkafka
 ```
 
 Publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Greensight\LaravelPhpRdKafka\LaravelPhpRdKafkaServiceProvider" --tag="kafka-config"
+php artisan vendor:publish --provider="Ensi\LaravelPhpRdKafka\LaravelPhpRdKafkaServiceProvider" --tag="kafka-config"
 ```
 
 Now go to `config/kafka.php` and configure your producers and consumers there.
@@ -28,7 +28,7 @@ Producer example:
 
 $producer = \Kafka::producer('producer-name'); // returns a configured RdKafka\Producer singleton.
 // or $producer = \Kafka::producer(); if you want to get the default producer.
-// or $producer = $kafkaManager->producer(); where $kafkaManager is an instance of Greensight\LaravelPhpRdKafka\KafkaManager resolved from the service container.
+// or $producer = $kafkaManager->producer(); where $kafkaManager is an instance of Ensi\LaravelPhpRdKafka\KafkaManager resolved from the service container.
 
 // now you can implement any producer logic e.g:
 

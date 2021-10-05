@@ -1,11 +1,11 @@
 {
-    "name": "greensight/laravel-phprdkafka",
+    "name": "ensi/laravel-phprdkafka",
     "description": "Bridge package between Laravel and php-rdkafka",
     "keywords": [
-        "greensight",
+        "ensi",
         "laravel"
     ],
-    "homepage": "https://github.com/greensight/laravel-phprdkafka",
+    "homepage": "https://github.com/ensi-platform/laravel-phprdkafka",
     "license": "MIT",
     "authors": [
         {
@@ -29,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Greensight\\LaravelPhpRdKafka\\": "src"
+            "Ensi\\LaravelPhpRdKafka\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Greensight\\LaravelPhpRdKafka\\Tests\\": "tests"
+            "Ensi\\LaravelPhpRdKafka\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -48,10 +48,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Greensight\\LaravelPhpRdKafka\\LaravelPhpRdKafkaServiceProvider"
+                "Ensi\\LaravelPhpRdKafka\\LaravelPhpRdKafkaServiceProvider"
             ],
             "aliases": {
-                "Kafka": "Greensight\\LaravelPhpRdKafka\\KafkaFacade"
+                "Kafka": "Ensi\\LaravelPhpRdKafka\\KafkaFacade"
             }
         }
     },

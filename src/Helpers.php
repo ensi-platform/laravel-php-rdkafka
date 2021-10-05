@@ -1,6 +1,6 @@
 <?php
 
-namespace Greensight\LaravelPhpRdKafka;
+namespace Ensi\LaravelPhpRdKafka;
 
 class Helpers
 {
