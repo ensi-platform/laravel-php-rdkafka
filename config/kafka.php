@@ -16,7 +16,8 @@ return [
          // consumer specific options
          'group.id' => env('KAFKA_CONSUMER_GROUP_ID', env('APP_NAME')),
          'enable.auto.commit' => true,
-         'auto.offset.reset' => 'largest',
+         'auto.offset.reset' => 'beginning',
+         'allow.auto.create.topics' => true,
       ],
    ],
    'producers' => [
