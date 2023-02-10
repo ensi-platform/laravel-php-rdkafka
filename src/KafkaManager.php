@@ -3,6 +3,7 @@
 namespace Ensi\LaravelPhpRdKafka;
 
 use InvalidArgumentException;
+use RdKafka;
 use RdKafka\Conf;
 use RdKafka\KafkaConsumer;
 use RdKafka\Producer;
@@ -31,7 +32,11 @@ class KafkaManager
     public function consumer(string $name = 'default'): KafkaConsumer
     {
         if (!isset($this->consumers[$name])) {
-            $this->consumers[$name] = new KafkaConsumer($this->makeKafkaConf($name, 'consumer'));
+            $this->consumers[$name] = new KafkaConsumer(
+                $this->makeKafkaConf(
+                    $this->rawKafkaSettings($name, 'consumer')
+                )
+            );
         }
 
         return $this->consumers[$name];
@@ -46,10 +51,23 @@ class KafkaManager
     public function producer(string $name = 'default'): Producer
     {
         if (!isset($this->producers[$name])) {
-            $this->producers[$name] = new Producer($this->makeKafkaConf($name, 'producer'));
+            $this->producers[$name] = new Producer(
+                $this->makeKafkaConf(
+                    $this->rawKafkaSettings($name, 'producer')
+                )
+            );
         }
 
         return $this->producers[$name];
+    }
+
+    public function rdKafka(string $connectionName): RdKafka
+    {
+        return new Producer(
+            $this->makeKafkaConf(
+                $this->rawConnectionConfig($connectionName)['settings']
+            )
+        );
     }
 
     public function availableConnections(): array
@@ -82,9 +100,8 @@ class KafkaManager
         return $this->topicName($clientConfig['connection'], $topicKey);
     }
 
-    protected function makeKafkaConf(string $clientName, string $clientType): Conf
+    protected function makeKafkaConf(array $rawConnectionSettings): Conf
     {
-        $rawConnectionSettings = $this->rawKafkaSettings($clientName, $clientType);
         $cleanedSettings = $this->cleanupKafkaSettings($rawConnectionSettings);
 
         $config = new Conf();

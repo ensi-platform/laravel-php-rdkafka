@@ -2,6 +2,10 @@
 
 namespace Ensi\LaravelPhpRdKafka;
 
+use Ensi\LaravelPhpRdKafka\Commands\CheckTopicsExistsCommand;
+use Ensi\LaravelPhpRdKafkaConsumer\Commands\KafkaCheckOffsetsCommand;
+use Ensi\LaravelPhpRdKafkaConsumer\Commands\KafkaConsumeCommand;
+use Ensi\LaravelPhpRdKafkaConsumer\Commands\KafkaSetOffset;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelPhpRdKafkaServiceProvider extends ServiceProvider
@@ -26,6 +30,10 @@ class LaravelPhpRdKafkaServiceProvider extends ServiceProvider
             $this->publishes([
                 $this->packageBasePath("/../config/kafka.php") => config_path("kafka.php"),
             ], "kafka-config");
+
+            $this->commands([
+                CheckTopicsExistsCommand::class,
+            ]);
         }
     }
 
