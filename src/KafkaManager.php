@@ -118,6 +118,17 @@ class KafkaManager
    }
 
 
+    public function topicName(string $topicKey): ?string
+    {
+        $topicList = $this->app['config']["kafka.topics"];
+        if (!isset($topicList[$topicKey])) {
+            throw new InvalidArgumentException("Topic with key '{$topicKey}' is not registered in kafka.topics");
+        }
+
+        return $topicList[$topicKey];
+    }
+
+
    protected function makeConfig(string $name, string $type): Conf
    {
       $availableValues = $this->app['config']["kafka.{$type}s"];
