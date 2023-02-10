@@ -2,166 +2,147 @@
 
 namespace Ensi\LaravelPhpRdKafka;
 
-use Illuminate\Support\Arr;
 use InvalidArgumentException;
-use Illuminate\Contracts\Foundation\Application;
 use RdKafka\Conf;
-use RdKafka\Producer;
 use RdKafka\KafkaConsumer;
+use RdKafka\Producer;
 
 class KafkaManager
 {
-   /**
-    * The application instance.
-    *
-    * @var \Illuminate\Contracts\Foundation\Application
-    */
-   protected $app;
+    /** @var array<KafkaConsumer> */
+    protected $consumers = [];
 
-   /**
-    * Consumers configs.
-    *
-    * @var array
-    */
-   protected $consumersConfigs = [];
+    /** @var array<Producer> */
+    protected $producers = [];
 
-   /**
-    * Producers configs.
-    *
-    * @var array
-    */
-   protected $producersConfigs = [];
+    protected $config = [];
 
-   /**
-    * Consumers.
-    *
-    * @var array
-    */
-   protected $consumers = [];
-
-   /**
-    * Producers.
-    *
-    * @var array
-    */
-   protected $producers = [];
-
-   /**
-    * Create a new kafka manager instance.
-    *
-    * @param  Application  $app
-    * @return void
-    */
-   public function __construct(Application $app)
-   {
-      $this->app = $app;
-   }
-
-   /**
-    * Get a consumer config instance.
-    *
-    * @param  string  $name
-    * @return Conf
-    */
-   public function consumerConfig(string $name = 'default'): Conf
-   {
-      if (!isset($this->consimersConfigs[$name])) {
-         $this->consimersConfigs[$name] = $this->makeConfig($name, 'consumer');
-      }
-
-      return $this->consimersConfigs[$name];
-   }
-
-   /**
-    * Get a producer config instance.
-    *
-    * @param  string  $name
-    * @return Conf
-    */
-   public function producerConfig(string $name = 'default'): Conf
-   {
-      if (!isset($this->producersConfigs[$name])) {
-         $this->producersConfigs[$name] = $this->makeConfig($name, 'producer');
-      }
-
-      return $this->producersConfigs[$name];
-   }
-
-   /**
-    * Get a consumer instance.
-    *
-    * @param  string  $name
-    * @return KafkaConsumer
-    */
-   public function consumer(string $name = 'default'): KafkaConsumer
-   {
-      if (!isset($this->consumers[$name])) {
-         $this->consumers[$name] = new KafkaConsumer($this->consumerConfig($name));
-      }
-
-      return $this->consumers[$name];
-   }
-
-   /**
-    * Get a producer instance.
-    *
-    * @param  string  $name
-    * @return Producer
-    */
-   public function producer(string $name = 'default'): Producer
-   {
-      if (!isset($this->producers[$name])) {
-         $this->producers[$name] = new Producer($this->producerConfig($name));
-      }
-
-      return $this->producers[$name];
-   }
-
-
-    public function topicName(string $topicKey): ?string
+    public function __construct()
     {
-        $topicList = $this->app['config']["kafka.topics"];
-        if (!isset($topicList[$topicKey])) {
+        $this->config = config('kafka');
+    }
+
+    /**
+     * Get a consumer instance.
+     *
+     * @param string $name
+     * @return KafkaConsumer
+     */
+    public function consumer(string $name = 'default'): KafkaConsumer
+    {
+        if (!isset($this->consumers[$name])) {
+            $this->consumers[$name] = new KafkaConsumer($this->makeKafkaConf($name, 'consumer'));
+        }
+
+        return $this->consumers[$name];
+    }
+
+    /**
+     * Get a producer instance.
+     *
+     * @param string $name
+     * @return Producer
+     */
+    public function producer(string $name = 'default'): Producer
+    {
+        if (!isset($this->producers[$name])) {
+            $this->producers[$name] = new Producer($this->makeKafkaConf($name, 'producer'));
+        }
+
+        return $this->producers[$name];
+    }
+
+    public function availableConnections(): array
+    {
+        return array_keys($this->config['connections']);
+    }
+
+    public function allTopics(string $connection): array
+    {
+        $connectionConfig = $this->rawConnectionConfig($connection);
+
+        return $connectionConfig['topics'];
+    }
+
+    public function topicName(string $connection, string $topicKey): string
+    {
+        $connectionConfig = $this->rawConnectionConfig($connection);
+
+        if (!isset($connectionConfig['topics'][$topicKey])) {
             throw new InvalidArgumentException("Topic with key '{$topicKey}' is not registered in kafka.topics");
         }
 
-        return $topicList[$topicKey];
+        return $connectionConfig['topics'][$topicKey];
     }
 
+    public function topicNameByClient(string $clientType, string $clientName, string $topicKey): string
+    {
+        $clientConfig = $this->rawClientConfig($clientType, $clientName);
 
-   protected function makeConfig(string $name, string $type): Conf
-   {
-      $availableValues = $this->app['config']["kafka.{$type}s"];
+        return $this->topicName($clientConfig['connection'], $topicKey);
+    }
 
-      if (is_null($configValues = Arr::get($availableValues, $name))) {
-         throw new InvalidArgumentException("$type config [kafka.{$type}s.{$name}] not found.");
-      }
+    protected function makeKafkaConf(string $clientName, string $clientType): Conf
+    {
+        $rawConnectionSettings = $this->rawKafkaSettings($clientName, $clientType);
+        $cleanedSettings = $this->cleanupKafkaSettings($rawConnectionSettings);
 
-      $config = new Conf();
-      foreach ($this->cleanupConfigValues($configValues) as $key => $value) {
-         $config->set($key, $value);
-      }
+        $config = new Conf();
+        foreach ($cleanedSettings as $key => $value) {
+            $config->set($key, $value);
+        }
 
-      return $config;
-   }
+        return $config;
+    }
 
-   protected function cleanupConfigValues(array $configValues)
-   {
-      foreach ($configValues as $key => $value) {
-         if ($value === null) {
-            unset($configValues[$key]);
-         }
-      }
+    /**
+     * Get raw kafka settings array, from merging of client additional-settings and connection settings
+     * @param string $clientName client name (key in kafka.consumers or kafka.producer)
+     * @param string $clientType 'consumer' or 'producer'
+     * @return array<string,mixed>
+     */
+    protected function rawKafkaSettings(string $clientName, string $clientType): array
+    {
+        $clientConfig = $this->rawClientConfig($clientType, $clientName);
+        $connectionConfig = $this->rawConnectionConfig($clientConfig['connection']);
 
-      $booleanToStrings = [
-         'enable.auto.commit',
-      ];
-      foreach ($booleanToStrings as $key) {
-         if (isset($configValues[$key])) {
-            $configValues[$key] = Helpers::stringifyBoolean($configValues[$key]);
-         }
-      }
+        return array_merge($connectionConfig['settings'], $clientConfig['additional-settings']);
+    }
 
-      return $configValues;
-   }
+    protected function rawConnectionConfig(string $connectionName): array
+    {
+        if (!isset($this->config['connections'][$connectionName])) {
+            throw new InvalidArgumentException("connection config [kafka.connections.{$connectionName}] not found.");
+        }
+
+        return $this->config['connections'][$connectionName];
+    }
+
+    protected function rawClientConfig(string $clientType, string $clientName): array
+    {
+        $haystack = $clientType . 's';
+        if (!isset($this->config[$haystack][$clientName])) {
+            throw new InvalidArgumentException("$clientType config [kafka.{$clientType}s.{$clientName}] not found.");
+        }
+
+        return $this->config[$haystack][$clientName];
+    }
+
+    /**
+     * Remove nulls and turn booleans to strings
+     * @param array<string,mixed> $configValues
+     * @return array<string,mixed>
+     */
+    protected function cleanupKafkaSettings(array $configValues): array
+    {
+        array_walk($configValues, function ($value, $key) use (&$result) {
+            if (is_null($value)) {
+                return;
+            }
+
+            $result[$key] = Helpers::stringifyBoolean($value);
+        });
+
+        return $result;
+    }
 }
