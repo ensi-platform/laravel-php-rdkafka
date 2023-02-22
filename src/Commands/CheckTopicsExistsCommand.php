@@ -31,14 +31,14 @@ class CheckTopicsExistsCommand extends Command
             }
         }
 
-        $notFoundTopics = count($notFoundTopics);
         if ($notFoundTopics) {
             $this->output->writeln(join("\n", $notFoundTopics));
         }
 
         if ($this->option('validate')) {
             if ($notFoundTopics) {
-                $this->output->writeln("\nThere are {$notFoundTopics} not created topics");
+                $notFoundTopicsCount = count($notFoundTopics);
+                $this->output->writeln("\nThere are {$notFoundTopicsCount} not created topics");
 
                 return self::FAILURE;
             } else {
