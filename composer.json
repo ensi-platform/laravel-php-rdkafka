@@ -5,7 +5,7 @@
         "ensi",
         "laravel"
     ],
-    "homepage": "https://github.com/ensi-platform/laravel-phprdkafka",
+    "homepage": "https://github.com/ensi-platform/laravel-php-rdkafka",
     "license": "MIT",
     "authors": [
         {
@@ -17,7 +17,7 @@
     "require": {
         "php": "^7.3 || ^8.0",
         "ext-rdkafka": "^5.0 || ^6.0",
-        "illuminate/contracts": "^8 || ^9"
+        "illuminate/contracts": "^8 || ^9 || ^10"
     },
     "require-dev": {
         "brianium/paratest": "^6.2",
