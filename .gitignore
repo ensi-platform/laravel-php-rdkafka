@@ -10,3 +10,6 @@ phpunit.xml
 psalm.xml
 testbench.yaml
 vendor
+studio.json
+.phpunit.*
+.php-cs-fixer.cache
