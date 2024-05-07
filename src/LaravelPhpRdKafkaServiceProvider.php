@@ -3,9 +3,6 @@
 namespace Ensi\LaravelPhpRdKafka;
 
 use Ensi\LaravelPhpRdKafka\Commands\CheckTopicsExistsCommand;
-use Ensi\LaravelPhpRdKafkaConsumer\Commands\KafkaCheckOffsetsCommand;
-use Ensi\LaravelPhpRdKafkaConsumer\Commands\KafkaConsumeCommand;
-use Ensi\LaravelPhpRdKafkaConsumer\Commands\KafkaSetOffset;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelPhpRdKafkaServiceProvider extends ServiceProvider
