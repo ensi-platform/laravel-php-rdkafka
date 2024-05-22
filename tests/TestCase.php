@@ -13,9 +13,4 @@ class TestCase extends Orchestra
             LaravelPhpRdKafkaServiceProvider::class,
         ];
     }
-
-    public function getEnvironmentSetUp($app): void
-    {
-        config()->set('database.default', 'testing');
-    }
 }
