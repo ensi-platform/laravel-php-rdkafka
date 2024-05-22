@@ -26,7 +26,7 @@ Configuration parameters can found in [Librdkafka Configuration reference](https
 
 ## Version Compatibility
 
-| Laravel rdfakfa | Laravel                    | PHP            | ext-rdkafka    |
+| Laravel rdkakfa | Laravel                    | PHP            | ext-rdkafka    |
 |-----------------|----------------------------|----------------|----------------|
 | ^0.1.0          | ^7.x \|\| ^8.x             | ^7.3 \|\| ^8.0 | ^5.0           |
 | ^0.2.0          | ^7.x \|\| ^8.x             | ^7.3 \|\| ^8.0 | ^5.0           |
