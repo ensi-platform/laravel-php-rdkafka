@@ -1,12 +1,5 @@
 <?php
 
-namespace Ensi\LaravelPhpRdKafka\Tests;
-
-class ExampleTest extends TestCase
-{
-    /** @test */
-    public function true_is_true()
-    {
-        $this->assertTrue(true);
-    }
-}
+test('true', function () {
+    expect(true)->toEqual(true);
+});

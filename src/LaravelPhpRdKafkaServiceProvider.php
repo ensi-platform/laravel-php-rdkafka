@@ -17,7 +17,7 @@ class LaravelPhpRdKafkaServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->packageBasePath("/../config/kafka.php"), 'kafka');
 
         $this->app->singleton('kafka', function ($app) {
-            return new KafkaManager($app);
+            return new KafkaManager();
         });
     }
 
