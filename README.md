@@ -1,5 +1,9 @@
 # Bridge package between Laravel and php-rdkafka
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/ensi/laravel-phprdkafka.svg?style=flat-square)](https://packagist.org/packages/ensi/laravel-phprdkafka)
+[![Tests](https://github.com/ensi-platform/laravel-php-rdkafka/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/ensi-platform/laravel-php-rdkafka/actions/workflows/run-tests.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/ensi/laravel-phprdkafka.svg?style=flat-square)](https://packagist.org/packages/ensi/laravel-phprdkafka)
+
 This packages allows you to describe Kafka producers and consumers in config/kafka.php and then reuse them everywhere.
 
 ## Installation
@@ -11,6 +15,7 @@ composer require ensi/laravel-phprdkafka
 ```
 
 Publish the config file with:
+
 ```bash
 php artisan vendor:publish --provider="Ensi\LaravelPhpRdKafka\LaravelPhpRdKafkaServiceProvider" --tag="kafka-config"
 ```
@@ -19,8 +24,20 @@ Now go to `config/kafka.php` and configure your producers and consumers there.
 You typically need one producer/consumer per Kafka Cluster.
 Configuration parameters can found in [Librdkafka Configuration reference](https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md)
 
-## Usage
+## Version Compatibility
 
+| Laravel rdfakfa | Laravel                    | PHP            | ext-rdkafka    |
+|-----------------|----------------------------|----------------|----------------|
+| ^0.1.0          | ^7.x \|\| ^8.x             | ^7.3 \|\| ^8.0 | ^5.0           |
+| ^0.2.0          | ^7.x \|\| ^8.x             | ^7.3 \|\| ^8.0 | ^5.0           |
+| ^0.2.1          | ^7.x \|\| ^8.x             | ^7.3 \|\| ^8.0 | ^5.0 \|\| ^6.0 |
+| ^0.2.2          | ^8.x \|\| ^9.x             | ^7.3 \|\| ^8.0 | ^5.0 \|\| ^6.0 |
+| ^0.3.0          | ^8.x \|\| ^9.x             | ^7.3 \|\| ^8.0 | ^5.0 \|\| ^6.0 |
+| ^0.3.3          | ^8.x \|\| ^9.x \|\| ^10.x  | ^7.3 \|\| ^8.0 | ^5.0 \|\| ^6.0 |
+| ^0.3.4          | ^8.x \|\| ^9.x \|\| ^11.x  | ^7.3 \|\| ^8.0 | ^5.0 \|\| ^6.0 |
+| ^0.4.0          | ^9.x \|\| ^10.x \|\| ^11.x | ^8.1           | ^5.0 \|\| ^6.0 |
+
+## Basic Usage
 
 Producer example:
 
@@ -99,21 +116,22 @@ Direct access to `RdKafka\Conf` instances is available with the following getter
 
 
 ```php
-
 $producerConf = $kafkaManager->producerConfig('producer-name');
 $consumerConf = $kafkaManager->consumerConfig('consumer-name');
-
 ```
 
-## Testing
+## Contributing
 
-```bash
-composer test
-```
+Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
-## Changelog
+### Testing
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+1. composer install
+2. composer test
+
+## Security Vulnerabilities
+
+Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
 
 ## License
 
