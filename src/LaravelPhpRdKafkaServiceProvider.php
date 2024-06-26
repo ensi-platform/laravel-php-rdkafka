@@ -7,21 +7,16 @@ use Illuminate\Support\ServiceProvider;
 
 class LaravelPhpRdKafkaServiceProvider extends ServiceProvider
 {
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom($this->packageBasePath("/../config/kafka.php"), 'kafka');
 
-        $this->app->singleton('kafka', function ($app) {
-            return new KafkaManager($app);
+        $this->app->scoped('kafka', function ($app) {
+            return new KafkaManager();
         });
     }
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
