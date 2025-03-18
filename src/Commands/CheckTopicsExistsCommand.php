@@ -4,12 +4,15 @@ namespace Ensi\LaravelPhpRdKafka\Commands;
 
 use Ensi\LaravelPhpRdKafka\KafkaFacade;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class CheckTopicsExistsCommand extends Command
 {
     protected $signature = 'kafka:find-not-created-topics
-                            {--validate : вернуть ошибку если есть не созданные топики}';
-    protected $description = 'Проверить что все топики из kafka.topics существуют';
+                            {--validate : вернуть ошибку, если есть не созданные топики}
+                            {--file= : путь до файла, в который записать список несуществующих топиков}';
+
+    protected $description = 'Проверить, что все топики из kafka.topics существуют';
 
     public function handle(): int
     {
@@ -20,7 +23,6 @@ class CheckTopicsExistsCommand extends Command
 
         foreach ($connectionNames as $connectionName) {
             $existingTopics = $this->getExistingTopics($connectionName);
-
             $desiredTopics = KafkaFacade::allTopics($connectionName);
             $totalDesiredTopics += count($desiredTopics);
 
@@ -32,17 +34,18 @@ class CheckTopicsExistsCommand extends Command
         }
 
         if ($notFoundTopics) {
-            $this->output->writeln(join("\n", $notFoundTopics));
+            $outputText = join("\n", $notFoundTopics);
+            $this->writeOutput($outputText);
         }
 
         if ($this->option('validate')) {
             if ($notFoundTopics) {
                 $notFoundTopicsCount = count($notFoundTopics);
-                $this->output->writeln("\nThere are {$notFoundTopicsCount} not created topics");
+                $this->writeOutput("\nThere are {$notFoundTopicsCount} not created topics");
 
                 return self::FAILURE;
             } else {
-                $this->output->writeln("All {$totalDesiredTopics} desired topics exists");
+                $this->writeOutput("All {$totalDesiredTopics} desired topics exist");
 
                 return self::SUCCESS;
             }
@@ -62,5 +65,16 @@ class CheckTopicsExistsCommand extends Command
         }
 
         return $existingTopics;
+    }
+
+    private function writeOutput(string $message): void
+    {
+        $filePath = $this->option('file');
+
+        if ($filePath) {
+            File::append($filePath, $message . PHP_EOL);
+        } else {
+            $this->output->writeln($message . PHP_EOL);
+        }
     }
 }
