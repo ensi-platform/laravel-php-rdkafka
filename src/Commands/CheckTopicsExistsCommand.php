@@ -11,7 +11,6 @@ class CheckTopicsExistsCommand extends Command
     protected $signature = 'kafka:find-not-created-topics
                             {--validate : вернуть ошибку, если есть не созданные топики}
                             {--file= : путь до файла, в который записать список несуществующих топиков}';
-
     protected $description = 'Проверить, что все топики из kafka.topics существуют';
 
     public function handle(): int
@@ -34,8 +33,7 @@ class CheckTopicsExistsCommand extends Command
         }
 
         if ($notFoundTopics) {
-            $outputText = join("\n", $notFoundTopics);
-            $this->writeOutput($outputText);
+            $this->writeOutput(join("\n", $notFoundTopics));
         }
 
         if ($this->option('validate')) {
