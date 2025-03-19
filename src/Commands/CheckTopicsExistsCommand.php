@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\File;
 class CheckTopicsExistsCommand extends Command
 {
     protected $signature = 'kafka:find-not-created-topics
-                            {--validate : вернуть ошибку, если есть не созданные топики}
-                            {--file= : путь до файла, в который записать список несуществующих топиков}';
-    protected $description = 'Проверить, что все топики из kafka.topics существуют';
+                            {--validate : return error if there are not created topics}
+                            {--file= : path to file in which to write a list of non-existent topics}';
+    protected $description = 'Check if all topics from kafka.topics exist';
 
     public function handle(): int
     {
