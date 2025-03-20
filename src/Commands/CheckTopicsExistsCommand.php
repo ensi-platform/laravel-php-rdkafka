@@ -70,10 +70,6 @@ class CheckTopicsExistsCommand extends Command
         $filePath = $this->option('file');
 
         if ($filePath) {
-            if (!File::exists($filePath)) {
-                File::put($filePath, '');
-            }
-
             File::append($filePath, $message . PHP_EOL);
         } else {
             $this->output->writeln($message . PHP_EOL);
