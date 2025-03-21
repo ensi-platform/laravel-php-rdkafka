@@ -70,8 +70,14 @@ class CheckTopicsExistsCommand extends Command
 
         if ($filePath) {
             file_put_contents($filePath, $message, FILE_APPEND);
+            $this->info("Filepath: {$filePath}");
+            $this->info("User: " . get_current_user());
+            $this->info("File exists: " . (file_exists($filePath) ? 'true' : 'false'));
+            $this->info("Is writable: " . (is_writable(dirname($filePath)) ? 'true' : 'false'));
+
         } else {
             $this->output->writeln($message);
+            $this->info("No filepath provided");
         }
     }
 }
