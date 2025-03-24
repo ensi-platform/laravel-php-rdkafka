@@ -15,9 +15,6 @@ class CheckTopicsExistsCommand extends Command
 
     public function handle(): int
     {
-        $filePath = $this->option('file');
-        File::append($filePath, realpath($filePath) ?: getcwd() . DIRECTORY_SEPARATOR . $filePath);
-
         $totalDesiredTopics = 0;
         $notFoundTopics = [];
 
