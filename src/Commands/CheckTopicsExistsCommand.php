@@ -32,7 +32,6 @@ class CheckTopicsExistsCommand extends Command
         }
 
         if ($notFoundTopics) {
-            $this->info("Not found topics: " . implode(', ', $notFoundTopics));
             $this->writeOutput(join("\n", $notFoundTopics));
         }
 
