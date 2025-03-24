@@ -15,10 +15,6 @@ class CheckTopicsExistsCommand extends Command
 
     public function handle(): int
     {
-        $filePath = $this->option('file');
-        $absolutePath = realpath($filePath) ?: getcwd() . DIRECTORY_SEPARATOR . $filePath;
-        $this->output->writeln("Writing to file: {$absolutePath}");
-
         $totalDesiredTopics = 0;
         $notFoundTopics = [];
 
@@ -74,6 +70,10 @@ class CheckTopicsExistsCommand extends Command
         $filePath = $this->option('file');
 
         if ($filePath) {
+
+            $absolutePath = realpath($filePath) ?: getcwd() . DIRECTORY_SEPARATOR . $filePath;
+            $this->output->writeln("Writing to file: {$absolutePath}");
+
             File::append($filePath, $message);
         } else {
             $this->output->writeln($message);
