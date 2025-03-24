@@ -4,6 +4,7 @@ namespace Ensi\LaravelPhpRdKafka\Commands;
 
 use Ensi\LaravelPhpRdKafka\KafkaFacade;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class CheckTopicsExistsCommand extends Command
 {
@@ -69,7 +70,7 @@ class CheckTopicsExistsCommand extends Command
         $filePath = $this->option('file');
 
         if ($filePath) {
-            file_put_contents($filePath, $message, FILE_APPEND);
+            File::append($filePath, $message);
         } else {
             $this->output->writeln($message);
         }
