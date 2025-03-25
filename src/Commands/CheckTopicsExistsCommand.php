@@ -16,9 +16,6 @@ class CheckTopicsExistsCommand extends Command
 
     public function handle(): int
     {
-        error_reporting(E_ALL & ~E_DEPRECATED);
-        ini_set('display_errors', '0');
-
         try {
             $totalDesiredTopics = 0;
             $notFoundTopics = [];
@@ -57,7 +54,7 @@ class CheckTopicsExistsCommand extends Command
 
             return self::SUCCESS;
         } catch (Throwable $e) {
-            $this->output->writeln($e->getMessage());
+            $this->writeOutput($e->getMessage());
 
             return self::FAILURE;
         }
