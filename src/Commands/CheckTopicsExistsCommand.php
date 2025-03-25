@@ -54,12 +54,7 @@ class CheckTopicsExistsCommand extends Command
 
             return self::SUCCESS;
         } catch (Throwable $e) {
-            logger()->debug('Error in kafka:find-not-created-topics', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            $this->output->writeln($e->getMessage());
 
             return self::FAILURE;
         }
