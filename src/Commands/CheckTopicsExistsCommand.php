@@ -16,6 +16,9 @@ class CheckTopicsExistsCommand extends Command
 
     public function handle(): int
     {
+        error_reporting(E_ALL & ~E_DEPRECATED);
+        ini_set('display_errors', '0');
+
         try {
             $totalDesiredTopics = 0;
             $notFoundTopics = [];
