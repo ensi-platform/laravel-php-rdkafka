@@ -5,7 +5,6 @@ namespace Ensi\LaravelPhpRdKafka\Commands;
 use Ensi\LaravelPhpRdKafka\KafkaFacade;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Throwable;
 
 class CheckTopicsExistsCommand extends Command
 {
@@ -16,48 +15,42 @@ class CheckTopicsExistsCommand extends Command
 
     public function handle(): int
     {
-        try {
-            $totalDesiredTopics = 0;
-            $notFoundTopics = [];
+        $totalDesiredTopics = 0;
+        $notFoundTopics = [];
 
-            $connectionNames = KafkaFacade::availableConnections();
+        $connectionNames = KafkaFacade::availableConnections();
 
-            foreach ($connectionNames as $connectionName) {
-                $existingTopics = $this->getExistingTopics($connectionName);
+        foreach ($connectionNames as $connectionName) {
+            $existingTopics = $this->getExistingTopics($connectionName);
 
-                $desiredTopics = KafkaFacade::allTopics($connectionName);
-                $totalDesiredTopics += count($desiredTopics);
+            $desiredTopics = KafkaFacade::allTopics($connectionName);
+            $totalDesiredTopics += count($desiredTopics);
 
-                foreach ($desiredTopics as $topicName) {
-                    if (!in_array($topicName, $existingTopics)) {
-                        $notFoundTopics[] = $topicName;
-                    }
+            foreach ($desiredTopics as $topicName) {
+                if (!in_array($topicName, $existingTopics)) {
+                    $notFoundTopics[] = $topicName;
                 }
             }
-
-            if ($notFoundTopics) {
-                $this->writeOutput(join("\n", $notFoundTopics));
-            }
-
-            if ($this->option('validate')) {
-                if ($notFoundTopics) {
-                    $notFoundTopicsCount = count($notFoundTopics);
-                    $this->writeOutput("\nThere are {$notFoundTopicsCount} not created topics");
-
-                    return self::FAILURE;
-                } else {
-                    $this->writeOutput("All {$totalDesiredTopics} desired topics exist");
-
-                    return self::SUCCESS;
-                }
-            }
-
-            return self::SUCCESS;
-        } catch (Throwable $e) {
-            $this->writeOutput($e->getMessage());
-
-            return self::FAILURE;
         }
+
+        if ($notFoundTopics) {
+            $this->writeOutput(join("\n", $notFoundTopics));
+        }
+
+        if ($this->option('validate')) {
+            if ($notFoundTopics) {
+                $notFoundTopicsCount = count($notFoundTopics);
+                $this->writeOutput("\nThere are {$notFoundTopicsCount} not created topics");
+
+                return self::FAILURE;
+            } else {
+                $this->writeOutput("All {$totalDesiredTopics} desired topics exist");
+
+                return self::SUCCESS;
+            }
+        }
+
+        return self::SUCCESS;
     }
 
     private function getExistingTopics(string $connectionName): array
