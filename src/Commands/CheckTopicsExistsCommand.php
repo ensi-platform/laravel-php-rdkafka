@@ -4,12 +4,14 @@ namespace Ensi\LaravelPhpRdKafka\Commands;
 
 use Ensi\LaravelPhpRdKafka\KafkaFacade;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class CheckTopicsExistsCommand extends Command
 {
     protected $signature = 'kafka:find-not-created-topics
-                            {--validate : вернуть ошибку если есть не созданные топики}';
-    protected $description = 'Проверить что все топики из kafka.topics существуют';
+                            {--validate : return error if there are not created topics}
+                            {--file= : path to file in which to write a list of non-existent topics}';
+    protected $description = 'Check if all topics from kafka.topics exist';
 
     public function handle(): int
     {
@@ -32,17 +34,17 @@ class CheckTopicsExistsCommand extends Command
         }
 
         if ($notFoundTopics) {
-            $this->output->writeln(join("\n", $notFoundTopics));
+            $this->writeOutput(join("\n", $notFoundTopics));
         }
 
         if ($this->option('validate')) {
             if ($notFoundTopics) {
                 $notFoundTopicsCount = count($notFoundTopics);
-                $this->output->writeln("\nThere are {$notFoundTopicsCount} not created topics");
+                $this->writeOutput("\nThere are {$notFoundTopicsCount} not created topics");
 
                 return self::FAILURE;
             } else {
-                $this->output->writeln("All {$totalDesiredTopics} desired topics exists");
+                $this->writeOutput("All {$totalDesiredTopics} desired topics exist");
 
                 return self::SUCCESS;
             }
@@ -62,5 +64,16 @@ class CheckTopicsExistsCommand extends Command
         }
 
         return $existingTopics;
+    }
+
+    private function writeOutput(string $message): void
+    {
+        $filePath = $this->option('file');
+
+        if ($filePath) {
+            File::append($filePath, $message);
+        } else {
+            $this->output->writeln($message);
+        }
     }
 }
